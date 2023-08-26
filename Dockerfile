@@ -2,9 +2,12 @@ FROM centos:8
 
 WORKDIR /github/workspace
 
-RUN dnf update -y centos-gpg-keys centos-stream-repos ca-certificates \
-    centos-stream-release centos-repos centos-stream-repos || \
-    echo "WARNING: repos update failed, continuing."
+RUN curl https://centos.mirror.garr.it/centos/RPM-GPG-KEY-CentOS-Official \
+    >/etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+
+RUN rm -fr /var/cache/* && dnf update -y centos-gpg-keys centos-repos \
+    centos-stream-repos centos-stream-release centos-stream-repos \
+    ca-certificates || echo "WARNING: repos update failed, continuing."
 
 RUN dnf update -y || echo "WARNING: packages update failed, continuing."
 
